@@ -4,3 +4,6 @@ src/__pycache__/
 input/
 output/
 model*/
+different_fps_video/
+video_frame/
+video_frame.zip
