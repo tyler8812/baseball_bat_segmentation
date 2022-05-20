@@ -1,5 +1,3 @@
-
-VIDEONAME = "C0036-24"
 INPUTFOLDER = "input/"
 OUTPUTFOLDER = "output/"
 SAVE = True
@@ -18,6 +16,13 @@ def video_capture(video_name, frame_rate=20, width=1920, height=1080):
 
 if __name__  =="__main__":
 
+    import argparse
+    parser = argparse.ArgumentParser(description='my description')
+    parser.add_argument("-i", "--input_video", help="input video to run", default="C0036-24")
+
+
+    args = parser.parse_args()
+    
     from detectron2.utils.logger import setup_logger
     setup_logger()
 
@@ -44,7 +49,7 @@ if __name__  =="__main__":
     predictor = DefaultPredictor(cfg)
 
 
-    cap, output_video = video_capture(VIDEONAME)
+    cap, output_video = video_capture(args.input_video)
     while cap.isOpened():
 
         ret, frame = cap.read()
