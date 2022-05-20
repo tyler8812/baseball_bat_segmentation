@@ -1,4 +1,6 @@
 
+TESTFOLDER = "video_frame/C0039-3"
+
 if __name__=="__main__":
     import os, cv2
     from detectron2.config import get_cfg
@@ -7,7 +9,7 @@ if __name__=="__main__":
     from detectron2.utils.visualizer import Visualizer
     from detectron2 import model_zoo
     
-    baseball_bat_metadata = register()
+    baseball_bat_metadata = register(TESTFOLDER)
 
     cfg = get_cfg()
     cfg.merge_from_file(
@@ -22,7 +24,7 @@ if __name__=="__main__":
     predictor = DefaultPredictor(cfg)
 
     from detectron2.utils.visualizer import ColorMode
-    dataset_dicts = get_baseball_bat_dicts("baseball_bat/test")
+    dataset_dicts = get_baseball_bat_dicts(TESTFOLDER + "/test")
     for d in dataset_dicts:    
         im = cv2.imread(d["file_name"])
         outputs = predictor(im)  # format is documented at https://detectron2.readthedocs.io/tutorials/models.html#model-output-format
@@ -36,3 +38,11 @@ if __name__=="__main__":
         cv2.imshow("frame", out_frame)
         if cv2.waitKey(0) == ord("q"):
             break
+
+    # evaluation
+    from detectron2.evaluation import COCOEvaluator, inference_on_dataset
+    from detectron2.data import build_detection_test_loader
+    evaluator = COCOEvaluator("baseball_bat_test", output_dir="../output")
+    val_loader = build_detection_test_loader(cfg, "baseball_bat_test")
+    print(inference_on_dataset(predictor.model, val_loader, evaluator))
+    # another equivalent way to evaluate the model is to use `trainer.test`

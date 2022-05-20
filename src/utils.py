@@ -44,11 +44,11 @@ def get_baseball_bat_dicts(img_dir):
     return dataset_dicts
 
 
-def register():
+def register(test_folder="baseball_bat/"):
     from detectron2.data import MetadataCatalog, DatasetCatalog
     for d in ["train", "test"]:
         DatasetCatalog.register(
-            "baseball_bat_" + d, lambda d=d: get_baseball_bat_dicts("baseball_bat/" + d)
+            "baseball_bat_" + d, lambda d=d: get_baseball_bat_dicts(test_folder +"/" + d)
         )
         MetadataCatalog.get("baseball_bat_" + d).set(thing_classes=["baseball_bat"])
     baseball_bat_metadata = MetadataCatalog.get("baseball_bat_train")
